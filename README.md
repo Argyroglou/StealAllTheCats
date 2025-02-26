@@ -23,7 +23,6 @@ The project is divided into multiple class libraries:
 - **HttpClient** (API Calls)
 - **AutoMapper** (DTO Mapping)
 - **Swagger** (API Documentation)
-- **xUnit** (Unit Testing)
 - **Dependency Injection** (IoC)
 
 ## 📦 Installation & Setup
