@@ -1,6 +1,6 @@
 # 🐱 StealAllTheCats
 
-StealAllTheCats is a .NET Web API that fetches and stores cat images from [TheCatAPI](https://thecatapi.com), using **Entity Framework Core**, **Serilog**, and **AutoMapper**. The project follows a **multi-layered architecture** for scalability and maintainability.
+StealAllTheCats is a .NET Web API that fetches and stores cat images from [TheCatAPI](https://thecatapi.com). The project follows a **multi-layered architecture** for scalability and maintainability.
 
 ## 🚀 Features
 - **Fetch and Save Cats**: Retrieves 25 random cat images and stores them in a database.
