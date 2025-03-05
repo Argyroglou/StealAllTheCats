@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StealAllTheCats.Core.Entities.Dtos;
 using StealAllTheCats.Core.Entities.Dtos.HttpApiDto;
@@ -21,40 +20,22 @@ public class CatService(ApplicationDbContext dbContext
         {
             var apiCats = await catApiClient.FetchCatsAsync();
             logger.LogInformation("Fetched {count} cats from the API", apiCats.Count);
-            var existingCatIds = dbContext.Cats.Select(c => c.CatId).ToHashSet();
 
-            var existingTags = await dbContext.Tags.ToDictionaryAsync(t => t.Name, StringComparer.OrdinalIgnoreCase, cancellationToken: cancellationToken);
+            var existingCatIds = dbContext.Cats
+                .Select(c => c.CatId)
+                .ToHashSet();
 
+            var existingTags = await dbContext.Tags
+                .ToDictionaryAsync(t => t.Name, StringComparer.OrdinalIgnoreCase, cancellationToken);
 
             List<Cat> catsToAdd = [];
-
-            foreach (var cat in apiCats.Where(c => !existingCatIds.Contains(c.Id)))
+            foreach (var cat in apiCats)
             {
-                var tagNames = cat.Breeds?
-                    .Where(b => !string.IsNullOrEmpty(b.Temperament))  // Filter breeds with non-empty temperament
-                    .SelectMany(b => (b.Temperament ?? "")  // Use empty string if temperament is null
-                        .Split([','], StringSplitOptions.RemoveEmptyEntries)  // Split temperaments into individual tags
-                        .Select(t => t.Trim()))
-                    .Distinct()
-                    .ToList() ?? [];  // Return empty list if null
+                if (existingCatIds.Contains(cat.Id))
+                    continue;
 
-                var tags = tagNames
-                    .Select(tagName =>
-                    {
-                        if (existingTags.TryGetValue(tagName, out var existingTag))
-                        {
-                            return existingTag;
-                        }
-                        var newTag = new Tag
-                        {
-                            Name = tagName
-                        };
-
-                        existingTags[tagName] = newTag;
-                        return newTag;
-                    })
-                    .ToList();
-
+                var tagNames = ExtractTagNames(cat);
+                var tags = GetOrCreateTags(tagNames, existingTags);
 
                 catsToAdd.Add(new Cat
                 {
@@ -66,7 +47,7 @@ public class CatService(ApplicationDbContext dbContext
                 });
             }
 
-            if (catsToAdd.Count != 0)
+            if (catsToAdd.Count > 0)
             {
                 dbContext.Cats.AddRange(catsToAdd);
                 await dbContext.SaveChangesAsync(cancellationToken);
@@ -77,7 +58,7 @@ public class CatService(ApplicationDbContext dbContext
         }
         catch (Exception ex)
         {
-            logger.LogError("An error occurred while fetching and storing cats: {error}", ex);
+            logger.LogError(ex, "An error occurred while fetching and storing cats.");
             throw;
         }
     }
@@ -155,5 +136,44 @@ public class CatService(ApplicationDbContext dbContext
             logger.LogError("An error occurred {error} while retrieving cats ", ex);
             throw;
         }
+    }
+
+    private static List<string> ExtractTagNames(FetchCatsApiResponse cat)
+    {
+        if (cat.Breeds == null)
+            return [];
+
+        List<string> tagNames = [];
+
+        foreach (var breed in cat.Breeds)
+        {
+            if (string.IsNullOrWhiteSpace(breed.Temperament))
+                continue;
+
+            var temperamentTags = breed.Temperament
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(t => t.Trim())
+                .Distinct();
+
+            tagNames.AddRange(temperamentTags);
+        }
+
+        return [.. tagNames.Distinct()];
+    }
+
+    private static List<Tag> GetOrCreateTags(List<string> tagNames, Dictionary<string, Tag> existingTags)
+    {
+        List<Tag> tags = [];
+
+        foreach (var tagName in tagNames)
+        {
+            if (!existingTags.TryGetValue(tagName, out var tag))
+            {
+                tag = new Tag { Name = tagName };
+                existingTags[tagName] = tag;
+            }
+            tags.Add(tag);
+        }
+        return tags;
     }
 }
