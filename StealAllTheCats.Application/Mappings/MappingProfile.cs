@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using StealAllTheCats.Application.Dtos;
 using StealAllTheCats.Core.Entities.Dtos;
-using StealAllTheCats.Core.Entities.Persistent;
 
 namespace StealAllTheCats.Application.Mappings;
 
