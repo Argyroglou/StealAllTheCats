@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35806.99 d17.13
+VisualStudioVersion = 17.13.35806.99
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StealAllTheCats.API", "StealAllTheCats.API\StealAllTheCats.API.csproj", "{279FD56D-A108-4B78-8D21-AF769F9028F8}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StealAllTheCats.Application", "StealAllTheCats.Application\StealAllTheCats.Application.csproj", "{34216862-ABA3-42AE-A933-0E086FD4E2C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StealAllTheCats.Infrastructure", "StealAllTheCats.Infrastructure\StealAllTheCats.Infrastructure.csproj", "{FAE8F9E0-456D-49B4-BBC7-507BE624A090}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StealAllTheCats.Tests", "StealAllTheCats.Tests\StealAllTheCats.Tests.csproj", "{73B42909-1E28-4904-B16D-3EBE3E56B238}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{FAE8F9E0-456D-49B4-BBC7-507BE624A090}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAE8F9E0-456D-49B4-BBC7-507BE624A090}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAE8F9E0-456D-49B4-BBC7-507BE624A090}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73B42909-1E28-4904-B16D-3EBE3E56B238}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73B42909-1E28-4904-B16D-3EBE3E56B238}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73B42909-1E28-4904-B16D-3EBE3E56B238}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73B42909-1E28-4904-B16D-3EBE3E56B238}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
